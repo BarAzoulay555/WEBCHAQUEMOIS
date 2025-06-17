@@ -13,7 +13,8 @@ def insert_products():
             "price": 220,
             "image": "BeigeRubySkirt.png",
             "size": "OneSize",
-            "color": "Beige"
+            "color": "Beige",
+            "supplier_id": 1
         },
         {
             "name": "Black Ruby Skirt",
@@ -22,7 +23,8 @@ def insert_products():
             "price": 210,
             "image": "BlackRubySkirt.png",
             "size": "OneSize",
-            "color": "Black"
+            "color": "Black",
+            "supplier_id": 1
         },
         {
             "name": "Emma dress Black",
@@ -31,7 +33,8 @@ def insert_products():
             "price": 300,
             "image": "EmmadressBlack.png",
             "size": "OneSize",
-            "color": "Black"
+            "color": "Black",
+            "supplier_id": 1
         },
         {
             "name": "White Ruby Skirt",
@@ -40,7 +43,8 @@ def insert_products():
             "price": 220,
             "image": "WhiteRubySkirt.png",
             "size": "OneSize",
-            "color": "White"
+            "color": "White",
+            "supplier_id": 1
         },
         {
             "name": "Emma dress white",
@@ -49,7 +53,8 @@ def insert_products():
             "price": 300,
             "image": "EmmadressWhite.png",
             "size": "OneSize",
-            "color": "White"
+            "color": "White",
+            "supplier_id": 1
         }
     ]
 
@@ -58,8 +63,8 @@ def insert_products():
 
     for product in products:
         cursor.execute("""
-            INSERT INTO products (name, quantity, reorder_level, price, image, size, color)
-            VALUES (?, ?, ?, ?, ?,?,?)
+            INSERT INTO products (name, quantity, reorder_level, price, image, size, color, supplier_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             product["name"],
             product["quantity"],
@@ -67,7 +72,8 @@ def insert_products():
             product["price"],
             product["image"],
             product["size"],
-            product["color"]
+            product["color"],
+            product["supplier_id"]
         ))
 
     conn.commit()

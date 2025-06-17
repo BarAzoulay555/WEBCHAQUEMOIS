@@ -31,3 +31,12 @@ CREATE TABLE IF NOT EXISTS purchase_orders (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+--טבלת משתמשים
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('admin', 'operator', 'supplier')),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

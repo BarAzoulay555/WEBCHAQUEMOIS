@@ -63,7 +63,7 @@ export default function Suppliers() {
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>📋 ניהול ספקים</h2>
+      <h2 className="mb-0"> ניהול ספקים</h2>
         <button className="btn btn-dark">➕ ספק חדש</button>
       </div>
 
