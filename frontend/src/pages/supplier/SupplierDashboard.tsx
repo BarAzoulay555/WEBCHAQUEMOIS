@@ -25,12 +25,12 @@ export default function SupplierDashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/supplier/products?supplier_id=1")
+      .get("/api/supplier/products?supplier_id=1")
       .then((res) => setProducts(res.data))
       .catch(() => setError("לא הצלחנו לטעון את המוצרים"));
 
     axios
-      .get("http://localhost:5000/api/supplier/orders?supplier_id=1")
+      .get("/api/supplier/orders?supplier_id=1")
       .then((res) => setOrders(res.data))
       .catch(() => setError("לא הצלחנו לטעון את ההזמנות"));
   }, []);

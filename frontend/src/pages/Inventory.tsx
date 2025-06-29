@@ -27,7 +27,7 @@ export default function Inventory() {
   }, []);
 
   const fetchProducts = () => {
-    axios.get("http://localhost:5000/api/products")
+    axios.get("/api/products")
       .then(res => {
         console.log(" מוצרים שהתקבלו מהשרת:", res.data); // 🔍 שורת בדיקה
         setProducts(res.data);
@@ -36,7 +36,7 @@ export default function Inventory() {
   };
 
   const handleAddProduct = () => {
-    axios.post("http://localhost:5000/api/products", newProduct)
+    axios.post("/api/products", newProduct)
       .then(() => {
         setShowAddModal(false);
         setNewProduct({});
@@ -45,7 +45,7 @@ export default function Inventory() {
   };
 
   const handleUpdateProduct = () => {
-    axios.put(`http://localhost:5000/api/products/${editProduct?.id}`, editProduct)
+    axios.put(`/api/products/${editProduct?.id}`, editProduct)
       .then(() => {
         setShowEditModal(false);
         setEditProduct(null);
@@ -54,7 +54,7 @@ export default function Inventory() {
   };
 
   const handleOrder = (productId: number) => {
-    axios.post("http://localhost:5000/api/orders", { product_id: productId, quantity: 1 })
+    axios.post("/api/orders", { product_id: productId, quantity: 1 })
       .then(() => alert("הזמנה בוצעה"));
   };
 

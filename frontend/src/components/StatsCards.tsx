@@ -10,7 +10,7 @@ export default function StatsCards() {
   });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/dashboard-stats")
+    axios.get("/api/dashboard-stats")
       .then((res) => setStats(res.data))
       .catch((err) => console.error("Failed to fetch stats:", err));
   }, []);

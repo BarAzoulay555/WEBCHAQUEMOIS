@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Navbar() {
   const location = useLocation();
@@ -7,12 +8,31 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
-    // הסרת טוקן או נתוני התחברות
-    localStorage.removeItem("token"); // אם יש לך שמות אחרים – עדכני כאן
-
-    // ניתוב לעמוד ההתחברות
+    localStorage.removeItem("token"); // אם יש טוקן אחר – עדכני כאן
     navigate("/login");
   };
+
+  const handleAdviceClick = async () => {
+    navigate("/ai-chat")
+    try {
+        const response = await axios.post("/api/ai/advice", {
+            name: "חצאית ג'ינס",
+            quantity: 10,
+            price: 129
+        });
+        const data = response.data;
+        alert("המלצת המערכת:\n" + data.recommendation);
+    } catch (error) {
+        console.error("AI Error:", error);
+        if (error.response) {
+            console.error("Response data:", error.response.data);
+            alert("שגיאה: " + JSON.stringify(error.response.data));
+        } else {
+            alert("שגיאה בקבלת ייעוץ 😓");
+        }
+    }
+};
+
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
@@ -47,9 +67,13 @@ export default function Navbar() {
           <li className="nav-item">
             <Link className={`nav-link ${isActive("/db-data") ? "active" : ""}`} to="/db-data">נתוני DB</Link>
           </li>
+          <li className="nav-item">
+            <button className="btn btn-outline-light ms-2" onClick={handleAdviceClick}>
+              📈 בקש ייעוץ רכישה
+            </button>
+          </li>
         </ul>
 
-        {/* כפתור התנתקות */}
         <button onClick={handleLogout} className="btn btn-outline-light">
           התנתקות
         </button>

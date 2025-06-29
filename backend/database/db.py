@@ -10,6 +10,14 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row  # מאפשר גישה לפי מפתחות (dict)
     return conn
 
+def get_all_products():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, quantity, price FROM products")  # ← עדכני את השמות אם צריך
+    products = cursor.fetchall()
+    conn.close()
+    return products
+
 # פונקציה שיוצרת את הטבלאות לפי קובץ SQL
 def initialize_db():
     conn = get_db_connection()

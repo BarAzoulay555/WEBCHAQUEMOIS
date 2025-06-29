@@ -7,14 +7,14 @@ def create_tables():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
-    # DROP all existing tables (if needed)
+    #DROP all existing tables (if needed)
     c.execute('DROP TABLE IF EXISTS invoices')
     c.execute('DROP TABLE IF EXISTS purchase_orders')
     c.execute('DROP TABLE IF EXISTS products')
     c.execute('DROP TABLE IF EXISTS suppliers')
     c.execute('DROP TABLE IF EXISTS users')
 
-    # USERS table
+     #USERS table
     c.execute('''
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

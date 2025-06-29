@@ -17,7 +17,7 @@ export default function SupplierInventory() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/supplier/products?supplier_id=1")
+      .get("/api/supplier/products?supplier_id=1")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Error fetching supplier inventory:", err));
   }, []);

@@ -17,7 +17,7 @@ export default function SupplierInvoices() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/supplier/invoices?supplier_name=Cotton Dreams")
+      .get("/api/supplier/invoices?supplier_name=Cotton Dreams")
       .then((res) => setInvoices(res.data))
       .catch((err) => console.error("Error fetching supplier invoices:", err));
   }, []);

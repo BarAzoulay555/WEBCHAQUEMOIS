@@ -8,7 +8,7 @@ export default function DBData() {
   const handleCheckDb = () => {
     setLoading(true);
     axios
-      .get("http://localhost:5000/api/db-check")
+      .get("/api/db-check")
       .then((res) => {
         setDbData(res.data);
         setLoading(false);

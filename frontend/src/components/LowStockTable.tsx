@@ -14,7 +14,7 @@ export default function LowStockTable() {
   const [lowStockItems, setLowStockItems] = useState<Product[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/low-stock")
+    axios.get("/api/low-stock")
       .then(res => setLowStockItems(res.data))
       .catch(err => console.error("Failed to fetch low stock:", err));
   }, []);

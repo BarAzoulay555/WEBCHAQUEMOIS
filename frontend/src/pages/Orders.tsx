@@ -23,7 +23,7 @@ export default function Orders() {
   useEffect(() => {
     const fetchOrders = () => {
       axios
-        .get("http://localhost:5000/api/orders")
+        .get("/api/orders")
         .then((res) => setOrders(res.data))
         .catch((err) => console.error("שגיאה בטעינת ההזמנות:", err));
     };
@@ -35,7 +35,7 @@ export default function Orders() {
 
   const handleConfirmAndUpdateStock = (order: Order) => {
     axios
-      .put(`http://localhost:5000/api/products/${order.product_id}/add-stock`, {
+      .put(`/api/products/${order.product_id}/add-stock`, {
         quantity: order.quantity,
       })
       .then(() => {

@@ -16,7 +16,7 @@ export default function OrderModal({ product, onClose, onSuccess }: Props) {
   const [urgent, setUrgent] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/suppliers")
+    axios.get("/api/suppliers")
       .then(res => setSuppliers(res.data))
       .catch(err => console.error("שגיאה בטעינת ספקים:", err));
   }, []);
@@ -29,7 +29,7 @@ export default function OrderModal({ product, onClose, onSuccess }: Props) {
       return;
     }
 
-    axios.post("http://localhost:5000/api/orders", {
+    axios.post("/api/orders", {
       product_id: product.id,
       supplier_id: selectedSupplier,
       quantity,

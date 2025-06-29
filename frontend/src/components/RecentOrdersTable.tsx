@@ -14,7 +14,7 @@ export default function RecentOrdersTable() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/orders")
+    axios.get("/api/orders")
       .then(res => {
         // ניקח רק את 5 האחרונות לפי created_at
         const sorted = res.data

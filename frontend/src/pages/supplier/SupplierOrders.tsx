@@ -19,14 +19,14 @@ export default function SupplierOrders() {
 
   const fetchOrders = () => {
     axios
-      .get("http://localhost:5000/api/supplier/orders?supplier_id=1")
+      .get("/api/supplier/orders?supplier_id=1")
       .then((res) => setOrders(res.data))
       .catch((err) => console.error("Error fetching supplier orders:", err));
   };
 
   const updateOrderStatus = (orderId: number, newStatus: string) => {
     axios
-      .patch(`http://localhost:5000/api/supplier/orders/${orderId}`, { status: newStatus })
+      .patch(`/api/supplier/orders/${orderId}`, { status: newStatus })
       .then(() => fetchOrders())
       .catch((err) => console.error("Error updating order status:", err));
   };

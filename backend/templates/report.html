@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>דו"ח מלאי - CHAQUEMOIS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      text-align: center;
+      padding: 2rem;
+    }
+    table {
+      width: 80%;
+      margin: auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px 12px;
+    }
+    th {
+      background-color: #444;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h2>📦 דו"ח מלאי</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>שם מוצר</th>
+        <th>כמות</th>
+        <th>מחיר</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td>{{ product['name'] }}</td>
+          <td>{{ product['quantity'] }}</td>
+          <td>{{ product['price'] }} ₪</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

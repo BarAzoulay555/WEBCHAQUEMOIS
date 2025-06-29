@@ -19,7 +19,7 @@ export default function LowStockAlert({ onClose }: Props) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/products")
+    axios.get("/api/products")
       .then((res) => {
         const filtered = res.data.filter((p: Product) => p.quantity < p.reorder_level);
         setLowStockItems(filtered);

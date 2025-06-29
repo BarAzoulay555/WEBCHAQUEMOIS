@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {useLocation, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import SupplierNavbar from './components/SupplierNavbar';
 import Home from './pages/Home';
@@ -9,6 +9,7 @@ import LoginPage from './pages/Login';
 import Inventory from './pages/Inventory';
 import Invoices from './pages/Invoices';
 import DBData from './pages/DBData';
+import AIChat from './pages/AIChat';
 
 // דפי ספק
 import SupplierDashboard from './pages/supplier/SupplierDashboard';
@@ -21,6 +22,7 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const storedRole = localStorage.getItem('role');
@@ -35,8 +37,11 @@ export default function App() {
   }
 
   return (
-    <Router>
-      {isAuthenticated && role === 'supplier' ? <SupplierNavbar /> : <Navbar />}
+    <>
+      {location.pathname !== '/login' && (
+  isAuthenticated && role === 'supplier' ? <SupplierNavbar /> : <Navbar />
+    )}
+
 
       <Routes>
         {/* דף התחברות / דף בית */}
@@ -68,6 +73,7 @@ export default function App() {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/db-data" element={<DBData />} />
+        <Route path="/ai-chat" element={<AIChat />} />  
 
         {/* דפים לספק */}
         <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
@@ -76,6 +82,6 @@ export default function App() {
         <Route path="/supplier/orders" element={<SupplierOrders />} />
         <Route path="/supplier/invoices" element={<SupplierInvoices />} />
       </Routes>
-    </Router>
+    </>
   );
 }

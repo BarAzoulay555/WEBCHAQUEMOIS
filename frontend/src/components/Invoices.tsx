@@ -20,7 +20,7 @@ export default function Invoices() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/invoices")
+      .get("/api/invoices")
       .then((res) => setInvoices(res.data))
       .catch((err) => console.error("שגיאה בטעינת חשבוניות:", err));
   }, []);
