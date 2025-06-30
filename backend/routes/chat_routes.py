@@ -47,9 +47,9 @@ def chat_with_ai():
     system_prompt = (
         "אתה עוזר חכם באתר CHAQUEMOIS, מערכת לניהול מלאי בגדי יוקרה.\n\n"
         "מידע עדכני מתוך המערכת לשימושך במענה:\n"
-        f"🔹 ספקים:\n{suppliers_info}\n\n"
-        f"🔹 מלאי מוצרים:\n{products_info}\n\n"
-        f"🔹 הזמנות רכש:\n{orders_info}\n\n"
+        f" ספקים:\n{suppliers_info}\n\n"
+        f" מלאי מוצרים:\n{products_info}\n\n"
+        f"הזמנות רכש:\n{orders_info}\n\n"
         "ענה על שאלות המשתמש בהתבסס על המידע הזה בלבד, בצורה תמציתית ובעברית בלבד."
     )
 

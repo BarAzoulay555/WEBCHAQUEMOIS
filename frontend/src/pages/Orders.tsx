@@ -19,6 +19,7 @@ export default function Orders() {
   const [popupMessage, setPopupMessage] = useState("");
   const [paymentOrder, setPaymentOrder] = useState<Order | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paidOrders, setPaidOrders] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchOrders = () => {
@@ -50,6 +51,11 @@ export default function Orders() {
   const handlePaymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPaymentSuccess(true);
+
+    if (paymentOrder) {
+      setPaidOrders((prev) => [...prev, paymentOrder.id]);
+    }
+
     setTimeout(() => {
       setPaymentOrder(null);
       setPaymentSuccess(false);
@@ -104,7 +110,7 @@ export default function Orders() {
                     }}
                     onClick={() => {
                       if (order.status === "לא התקבל") {
-                        setPopupMessage("⚠️ המוצר חסר במלאי אצל הספק, אנא בחר ספק אחר");
+                        setPopupMessage("המוצר חסר במלאי אצל הספק, אנא בחר ספק אחר");
                         setShowPopup(true);
                       } else if (order.status === "הזמנה אושרה") {
                         setPaymentOrder(order);
@@ -126,12 +132,18 @@ export default function Orders() {
                   </button>
                 </td>
                 <td>
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => setPaymentOrder(order)}
-                  >
-                    💳 תשלום
-                  </button>
+                  {paidOrders.includes(order.id) ? (
+                    <button className="btn btn-success btn-sm" disabled>
+                      שולם
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => setPaymentOrder(order)}
+                    >
+                      תשלום
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -197,8 +209,8 @@ export default function Orders() {
                     <div className="my-3">
                       <label className="form-label">Payment Method</label>
                       <div className="d-flex gap-3">
-                        <button type="button" className="btn btn-outline-dark" disabled>💳 Visa / Mastercard</button>
-                        <button type="button" className="btn btn-outline-dark" disabled>💲 PayPal</button>
+                        <button type="button" className="btn btn-outline-dark" disabled>Visa / Mastercard</button>
+                        <button type="button" className="btn btn-outline-dark" disabled>PayPal</button>
                       </div>
                     </div>
 
@@ -233,6 +245,36 @@ export default function Orders() {
           </div>
         </div>
       )}
+
+      {/* הזמנות עבר פיקטיביות */}
+      <div className="mt-5">
+        <h4 className="fw-bold mb-3 text-center">הזמנות עבר</h4>
+        <table className="table table-striped table-bordered text-center">
+          <thead className="table-light">
+            <tr>
+              <th>מזהה</th>
+              <th>שם מוצר</th>
+              <th>כמות</th>
+              <th>תאריך</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { id: 1, name: "Black Ruby Skirt", quantity: 250, date: "01/02/2025" },
+              { id: 2, name: "Emma Dress White", quantity: 250, date: "01/02/2025" },
+              { id: 3, name: "Beige Ruby Skirt", quantity: 250, date: "01/02/2025" },
+              { id: 4, name: "Emma Dress Black", quantity: 250, date: "01/02/2025" },
+            ].map(order => (
+              <tr key={order.id}>
+                <td>{order.id}</td>
+                <td>{order.name}</td>
+                <td>{order.quantity}</td>
+                <td>{order.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

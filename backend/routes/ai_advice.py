@@ -43,7 +43,7 @@ def get_ai_recommendation():
 
         # הפעלת ollama עם קידוד תקין ו-timeout
         process = subprocess.Popen(
-            ["ollama", "run", "mistral"],
+            ["ollama", "run", "llama3"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

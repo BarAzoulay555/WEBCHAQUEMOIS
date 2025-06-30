@@ -13,26 +13,27 @@ export default function Navbar() {
   };
 
   const handleAdviceClick = async () => {
-    navigate("/ai-chat")
+    navigate("/ai-chat");
     try {
-        const response = await axios.post("/api/ai/advice", {
-            name: "חצאית ג'ינס",
-            quantity: 10,
-            price: 129
-        });
-        const data = response.data;
-        alert("המלצת המערכת:\n" + data.recommendation);
+      const response = await axios.post("/api/ai/advice", {
+        name: "חצאית ג'ינס",
+        quantity: 10,
+        price: 129
+      });
+      const data = response.data;
+      alert("המלצת המערכת:\n" + data.recommendation);
     } catch (error) {
-        console.error("AI Error:", error);
-        if (error.response) {
-            console.error("Response data:", error.response.data);
-            alert("שגיאה: " + JSON.stringify(error.response.data));
-        } else {
-            alert("שגיאה בקבלת ייעוץ 😓");
-        }
+      console.error("AI Error:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Response data:", error.response?.data);
+        alert("שגיאה: " + JSON.stringify(error.response?.data));
+      } else if (error instanceof Error) {
+        alert("שגיאה: " + error.message);
+      } else {
+        alert("שגיאה בקבלת ייעוץ 😓");
+      }
     }
-};
-
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">

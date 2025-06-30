@@ -17,7 +17,7 @@ type Invoice = {
   recipient: string;
 };
 
-export default function Invoices() {
+export default function SupplierInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
 
   useEffect(() => {
@@ -26,6 +26,47 @@ export default function Invoices() {
       .then((res) => setInvoices(res.data))
       .catch((err) => console.error("שגיאה בטעינת החשבוניות:", err));
   }, []);
+
+  const visualInvoiceBatch = (() => {
+    const recipient = "חנות CHAQUEMOIS";
+    const note = "הזמנה ראשונית - פתיחת חנות";
+    const urgent = false;
+    const supplier_name = "Cotton Dreams";
+
+    const products = [
+      { product_name: "Black Ruby Skirt", price_per_unit: 120 },
+      { product_name: "Emma Dress White", price_per_unit: 200 },
+      { product_name: "Beige Ruby Skirt", price_per_unit: 130 },
+      { product_name: "Emma Dress Black", price_per_unit: 210 },
+    ];
+
+    let total_price = 0;
+    const productsList: string[] = [];
+
+    products.forEach(({ product_name, price_per_unit }) => {
+      const subtotal = price_per_unit * 250;
+      total_price += subtotal;
+      productsList.push(`${product_name} - 250 יחידות × ${price_per_unit} ₪ = ${subtotal} ₪`);
+    });
+
+    return [
+      {
+        id: 1000,
+        order_id: 0,
+        product_name: productsList.join("\n"),
+        supplier_name,
+        quantity: products.length * 250,
+        price_per_unit: 0,
+        total_price,
+        issued_at: new Date("2025-02-01T09:13:09").toISOString(),
+        urgent,
+        note,
+        recipient,
+      },
+    ];
+  })();
+
+  const allInvoices = [...invoices, ...visualInvoiceBatch];
 
   const exportToPDF = async (id: number) => {
     const element = document.getElementById(`invoice-${id}`);
@@ -37,7 +78,7 @@ export default function Invoices() {
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: "a4"
+      format: "a4",
     });
 
     const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -54,13 +95,13 @@ export default function Invoices() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">📄 חשבוניות</h2>
+      <h2 className="text-center mb-4">📄 חשבוניות ספקים</h2>
 
-      {invoices.length === 0 ? (
+      {allInvoices.length === 0 ? (
         <div className="alert alert-info">אין חשבוניות להצגה.</div>
       ) : (
         <div className="row">
-          {invoices.map((inv) => (
+          {allInvoices.map((inv) => (
             <div className="col-md-6 mb-4" key={inv.id}>
               <div
                 className="card shadow border rounded p-3"
@@ -68,19 +109,26 @@ export default function Invoices() {
                 style={{
                   fontSize: "0.9rem",
                   maxWidth: "500px",
-                  margin: "0 auto"
+                  margin: "0 auto",
                 }}
               >
-                <div className="text-center mb-3">
-                  {/* לוגו - שימי את קובץ הלוגו ב-public/logo.png */}
-                  <img src="/logo.png" alt="CHAQUEMOIS Logo" style={{ height: "40px" }} />
-                </div>
                 <h5 className="card-title mb-3 text-center">חשבונית #{inv.id}</h5>
                 <p><strong>הזמנה:</strong> {inv.order_id}</p>
-                <p><strong>מוצר:</strong> {inv.product_name}</p>
+
+                <p>
+                  <strong>מוצרים:</strong><br />
+                  {inv.product_name.split("\n").map((line, idx) => (
+                    <span key={idx}>{line}<br /></span>
+                  ))}
+                </p>
+
                 <p><strong>ספק:</strong> {inv.supplier_name}</p>
-                <p><strong>כמות:</strong> {inv.quantity}</p>
-                <p><strong>מחיר יחידה:</strong> {inv.price_per_unit} ₪</p>
+                <p><strong>כמות כוללת:</strong> {inv.quantity}</p>
+
+                {inv.id < 100000 && (
+                  <p><strong>מחיר יחידה:</strong> {inv.price_per_unit} ₪</p>
+                )}
+
                 <p><strong>סה"כ לתשלום:</strong> {inv.total_price} ₪</p>
                 <p><strong>תאריך הנפקה:</strong> {new Date(inv.issued_at).toLocaleString("he-IL")}</p>
                 <p><strong>דחוף:</strong> {inv.urgent ? "כן" : "לא"}</p>
