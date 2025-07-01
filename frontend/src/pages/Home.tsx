@@ -34,7 +34,7 @@ export default function Home() {
       </div>
 
       {/* התראה למלאי נמוך */}
-      <LowStockAlert />
+      {/* <LowStockAlert /> */}
 
       {/* קלפים סטטיסטיים */}
       <div className="row justify-content-center mb-4">

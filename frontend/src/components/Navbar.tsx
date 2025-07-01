@@ -8,7 +8,7 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // אם יש טוקן אחר – עדכני כאן
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -25,7 +25,6 @@ export default function Navbar() {
     } catch (error) {
       console.error("AI Error:", error);
       if (axios.isAxiosError(error)) {
-        console.error("Response data:", error.response?.data);
         alert("שגיאה: " + JSON.stringify(error.response?.data));
       } else if (error instanceof Error) {
         alert("שגיאה: " + error.message);
@@ -69,12 +68,14 @@ export default function Navbar() {
             <Link className={`nav-link ${isActive("/db-data") ? "active" : ""}`} to="/db-data">נתוני DB</Link>
           </li>
           <li className="nav-item">
-            <button className="btn btn-outline-light ms-2" onClick={handleAdviceClick}>
+            <Link className={`nav-link ${isActive("/appointments") ? "active" : ""}`} to="/appointments">יומן פגישות</Link>
+          </li>
+          <li className="nav-item ms-2">
+            <button className="btn btn-outline-light" onClick={handleAdviceClick}>
               📈 בקש ייעוץ רכישה
             </button>
           </li>
         </ul>
-
         <button onClick={handleLogout} className="btn btn-outline-light">
           התנתקות
         </button>

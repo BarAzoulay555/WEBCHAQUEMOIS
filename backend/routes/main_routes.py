@@ -81,20 +81,20 @@ def get_orders():
     for row in rows:
         order = dict(row)
         created_at = datetime.fromisoformat(order['created_at'])
-        minutes_passed = (now - created_at).total_seconds() / 60
+        seconds_passed = (now - created_at).total_seconds()
         supplier_name = order['supplier_name']
+        order['status'] = "ההזמנה התקבלה אצל הספק"
 
         if supplier_name == "Cotton Dreams":
-            if minutes_passed >= 1:
+            if seconds_passed >= 10820:
                 order['status'] = "לא התקבל"
         else:
-            if minutes_passed >= 2:
-                order['status'] = "הוזמנה אושרה"
+            if seconds_passed >= 10820:  # increased by 20 seconds
+                order['status'] = "הזמנה אושרה"
                 create_invoice_if_not_exists(order, conn)
-            elif minutes_passed >= 1:
-                order['status'] = "הזמנה התקבלה אצל ספק"
 
         updated_orders.append(order)
+
 
     conn.close()
     return jsonify(updated_orders)

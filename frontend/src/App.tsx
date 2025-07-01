@@ -10,6 +10,8 @@ import Inventory from './pages/Inventory';
 import Invoices from './pages/Invoices';
 import DBData from './pages/DBData';
 import AIChat from './pages/AIChat';
+import Appointments from "./pages/Appointments";
+
 
 // דפי ספק
 import SupplierDashboard from './pages/supplier/SupplierDashboard';
@@ -74,6 +76,7 @@ export default function App() {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/db-data" element={<DBData />} />
         <Route path="/ai-chat" element={<AIChat />} />  
+        <Route path="/appointments" element={<Appointments />} />
 
         {/* דפים לספק */}
         <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
