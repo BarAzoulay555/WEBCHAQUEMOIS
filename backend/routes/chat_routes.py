@@ -1,55 +1,36 @@
 from flask import Blueprint, request, jsonify
 import sqlite3
 import os
-import requests
+from backend.ai.ollama_runner import ollama_runner  # שימוש בפונקציה שלך להרצת המודל
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/api/ai")
 
-MAX_RESPONSE_LENGTH = 1500  # Increased for better responses
-MAX_PROMPT_LENGTH = 4000    # Allowing a longer context
-
-DB_PATH = os.path.join(os.path.dirname(__file__), '../database/db.sqlite3')
-
-# === Utility: fetch limited, relevant data ===
 def get_project_data():
-    conn = sqlite3.connect(DB_PATH)
+    db_path = os.path.join(os.path.dirname(__file__), '../database/db.sqlite3')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Fetch top 5 rated suppliers
-    cursor.execute("""
-        SELECT name, contact_name, phone, num_products, rating, reliability
-        FROM suppliers
-        ORDER BY rating DESC LIMIT 5
-    """)
+    # שליפת ספקים
+    cursor.execute("SELECT name, contact_name, phone, num_products, rating, reliability FROM suppliers")
     suppliers = cursor.fetchall()
     suppliers_info = "\n".join([
-        f"{name} (Contact: {contact_name}, Phone: {phone}, Products: {num_products}, Rating: {rating}, Reliability: {reliability})"
+        f"{name} (איש קשר: {contact_name}, טלפון: {phone}, מספר מוצרים: {num_products}, דירוג: {rating}, אמינות: {reliability})"
         for name, contact_name, phone, num_products, rating, reliability in suppliers
     ])
 
-    # Fetch products with low stock
-    cursor.execute("""
-        SELECT name, quantity, reorder_level
-        FROM products
-        WHERE quantity < reorder_level
-        LIMIT 10
-    """)
+    # שליפת מוצרים
+    cursor.execute("SELECT name, quantity, reorder_level FROM products")
     products = cursor.fetchall()
     products_info = "\n".join([
-        f"{name} - Quantity: {quantity}, Reorder Level: {reorder_level}"
+        f"{name} - כמות: {quantity}, רמת חידוש: {reorder_level}"
         for name, quantity, reorder_level in products
     ])
 
-    # Fetch last 5 orders
-    cursor.execute("""
-        SELECT id, product_id, quantity, status
-        FROM purchase_orders
-        ORDER BY created_at DESC
-        LIMIT 5
-    """)
+    # שליפת הזמנות רכש
+    cursor.execute("SELECT id, product_id, quantity, status FROM purchase_orders")
     orders = cursor.fetchall()
     orders_info = "\n".join([
-        f"Order #{order_id} - Product ID: {product_id}, Quantity: {quantity}, Status: {status}"
+        f"הזמנה #{order_id} - מוצר ID: {product_id}, כמות: {quantity}, סטטוס: {status}"
         for order_id, product_id, quantity, status in orders
     ])
 
@@ -64,51 +45,27 @@ def chat_with_ai():
     suppliers_info, products_info, orders_info = get_project_data()
 
     system_prompt = (
-        "You are a smart assistant for the CHAQUEMOIS luxury clothing inventory management system.\n\n"
-        "You will answer user questions precisely using ONLY the structured data below.\n"
-        "If the data is not available, respond that the data is not available.\n"
-        "Respond in English only.\n\n"
-        f"Top Suppliers:\n{suppliers_info}\n\n"
-        f"Low Stock Products:\n{products_info}\n\n"
-        f"Recent Purchase Orders:\n{orders_info}\n\n"
+        "אתה עוזר חכם באתר CHAQUEMOIS, מערכת לניהול מלאי בגדי יוקרה.\n\n"
+        "מידע עדכני מתוך המערכת לשימושך במענה:\n"
+        f"ספקים:\n{suppliers_info}\n\n"
+        f"מלאי מוצרים:\n{products_info}\n\n"
+        f"הזמנות רכש:\n{orders_info}\n\n"
+        "ענה על שאלות המשתמש בהתבסס על המידע הזה בלבד, בצורה תמציתית "
     )
 
-    prompt = system_prompt + "\n"
+    prompt = system_prompt + "\n\n"
     for msg in messages:
-        role = "User" if msg["role"] == "user" else "AI"
+        role = "משתמש" if msg["role"] == "user" else "AI"
         prompt += f"{role}: {msg['content']}\n"
     prompt += "AI:"
 
-    if len(prompt) > MAX_PROMPT_LENGTH:
-        prompt = prompt[:MAX_PROMPT_LENGTH] + "\n\n(Note: Context was truncated due to length limit.)"
-
     try:
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": "llama3",
-                "prompt": prompt,
-                "stream": False
-            },
-            timeout=300
-        )
-        response.raise_for_status()
-        result = response.json()
-        answer = result.get("response", "").strip()
+        response_text = ollama_runner(prompt, model="llama3", timeout=300)
 
-        if not answer:
-            return jsonify({"response": "No response received from the model. Please try again."}), 500
+        if not response_text:
+            return jsonify({"response": "❌ לא התקבלה תגובה מהמודל. נסה שוב."}), 500
 
-        if len(answer) > MAX_RESPONSE_LENGTH:
-            answer = answer[:MAX_RESPONSE_LENGTH] + "..."
-
-        return jsonify({"response": answer})
-
-    except requests.exceptions.Timeout:
-        return jsonify({"response": "The request to Ollama timed out. Please try again."}), 504
-
-    except requests.exceptions.RequestException as e:
-        return jsonify({"response": f"Connection error to Ollama: {str(e)}"}), 500
+        return jsonify({"response": response_text})
 
     except Exception as e:
-        return jsonify({"response": f"Server error: {str(e)}"}), 500
+        return jsonify({"response": f"שגיאה בשרת: {str(e)}"}), 500
