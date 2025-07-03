@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import os
 import re
 import traceback
-from backend.ai.ollama_runner import ollama_runner  # ← שימוש בפונקציה החיצונית
+from backend.controllers.ollama_runner import ollama_runner  # ← שימוש בפונקציה החיצונית
 
 ai_bp = Blueprint('ai', __name__, url_prefix='/api/ai')
 

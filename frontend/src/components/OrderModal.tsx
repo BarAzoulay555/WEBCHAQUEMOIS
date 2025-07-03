@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Product, Supplier } from "../types"; 
+import { Product, Supplier } from "../models/types"; 
 
 type Props = {
   product: Product;

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import sqlite3
 import os
-from backend.ai.ollama_runner import ollama_runner  # שימוש בפונקציה שלך להרצת המודל
+from backend.controllers.ollama_runner import ollama_runner  # שימוש בפונקציה שלך להרצת המודל
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/api/ai")
 
